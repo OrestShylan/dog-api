@@ -1,16 +1,49 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+import { Component } from 'react';
+import axios from 'axios';
+import Select from 'react-select';
+
+axios.defaults.baseURL = 'https://api.thedogapi.com/v1';
+axios.defaults.headers.common['x-api-key'] = process.env.REACT_APP_API_KEY;
+
+export class App extends Component {
+  state = {
+    breeds: []
+  }
+  async componentDidMount() {
+    try {
+      const response = await axios.get('/breeds');
+      this.setState({breeds: response.data});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  selectBreed = async option => {
+    console.log(option.value);
+    try {
+      const response = await axios.get(`/images/search?:breed_id=${option.value}`)
+        console.log(response.data);;
+    } catch (error) {
+      
+    }
+  };
+  
+  buildSelectOptions = () => {
+   return this.state.breeds.map(breed => ({
+      value: breed.id,
+      label: breed.name,
+    }))
+    
+  }
+  
+  render() {
+    
+    const options = this.buildSelectOptions();
+    
+    return (
+      <>
+        <Select options={options} onChange={this.selectBreed} />
+      </>
+    );
+  }
+}
