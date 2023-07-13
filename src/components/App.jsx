@@ -39,19 +39,19 @@ export class App extends Component {
 
   render() {
     const options = this.buildSelectOptions();
-    const { dog } = this.state;
+
     return (
       <>
         <Select options={options} onChange={this.selectBreed} />
         {/* option = породи собак
         onChange = статистика про породу однієї собаки */}
-        {dog && (
+        {this.state.dog && (
           <div style={{ display: 'flex', gap: 16 }}>
-            <img src={dog.url} width="480" alt="dog" />
+            <img src={this.state.dog.url} width="480" alt="dog" />
             <div>
-              <p>Name: {dog.breeds[0].name}</p>
-              <p> Breed for: {dog.breeds[0].bred_for}</p>
-              <p> Temperament: {dog.breeds[0].temperament} </p>
+              <p>Name: {this.state.dog.breeds[0].name}</p>
+              <p> Breed for: {this.state.dog.breeds[0].bred_for}</p>
+              <p> Temperament: {this.state.dog.breeds[0].temperament} </p>
             </div>
           </div>
         )}
