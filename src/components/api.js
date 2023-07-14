@@ -9,8 +9,8 @@ export const fetchBreeds = async () => {
 };
 
 export const fetchDogByBreed = async breed => {
-   const response = await axios.get('/images/search', {
-     params: { breed_id: breed },
-   });
+  const response = await axios.get('/images/search', {
+    params: { breed_id: breed },
+  });
   return response.data[0];
 };

@@ -39,7 +39,7 @@ export class App extends Component {
 
   render() {
     const options = this.buildSelectOptions();
-    
+
     return (
       <>
         <Select options={options} onChange={this.selectBreed} />
