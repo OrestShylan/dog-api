@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import axios from 'axios';
 import Select from 'react-select';
+import { fetchBreeds, fetchDogByBreed } from './api';
+import { Dog } from './Dog';
 
 axios.defaults.baseURL = 'https://api.thedogapi.com/v1';
 axios.defaults.headers.common['x-api-key'] = process.env.REACT_APP_API_KEY;
@@ -12,8 +14,8 @@ export class App extends Component {
   };
   async componentDidMount() {
     try {
-      const response = await axios.get('/breeds');
-      this.setState({ breeds: response.data });
+      const breeds = await fetchBreeds();
+      this.setState({ breeds: breeds });
     } catch (error) {
       console.log(error);
     }
@@ -22,11 +24,9 @@ export class App extends Component {
   selectBreed = async option => {
     console.log(option.value);
     try {
-      const response = await axios.get(
-        `/images/search?:breed_id=${option.value}`
-      );
-      this.setState({ dog: response.data[0] });
-      console.log(response.data);
+      const getBreed = await fetchDogByBreed(option.value);
+      this.setState({ dog: getBreed });
+      console.log(getBreed);
     } catch (error) {}
   };
 
@@ -39,22 +39,13 @@ export class App extends Component {
 
   render() {
     const options = this.buildSelectOptions();
-
+    
     return (
       <>
         <Select options={options} onChange={this.selectBreed} />
         {/* option = породи собак
         onChange = статистика про породу однієї собаки */}
-        {this.state.dog && (
-          <div style={{ display: 'flex', gap: 16 }}>
-            <img src={this.state.dog.url} width="480" alt="dog" />
-            <div>
-              <p>Name: {this.state.dog.breeds[0].name}</p>
-              <p> Breed for: {this.state.dog.breeds[0].bred_for}</p>
-              <p> Temperament: {this.state.dog.breeds[0].temperament} </p>
-            </div>
-          </div>
-        )}
+        {this.state.dog && <Dog dog={this.state.dog}> </Dog>}
       </>
     );
   }
